@@ -1,0 +1,50 @@
+# Visual Studio: cache y preferencias personales
+.vs/
+*.user
+*.suo
+*.sln.docstates
+*.VC.db
+*.VC.db-shm
+*.VC.db-wal
+*.VC.VC.opendb
+ipch/
+
+# Carpetas de compilacion, en cualquier nivel
+[Dd]ebug/
+[Rr]elease/
+[Dd]ebugPublic/
+x64/
+x86/
+Win32/
+ARM/
+ARM64/
+[Bb]uild/
+[Bb]in/
+[Oo]bj/
+
+# Archivos intermedios y resultados de compilacion
+*.exe
+*.pdb
+*.idb
+*.ipch
+*.pch
+*.ilk
+*.iobj
+*.ipdb
+*.exp
+*.tlog
+*.lastbuildstate
+*.recipe
+*.log
+
+# Assets: se descargan desde Drive
+/CG-DiaDeMuertos/Texturas/
+/CG-DiaDeMuertos/resources/
+
+# Carpeta opcional para futuros assets
+/CG-DiaDeMuertos/assets/
+
+# Archivos temporales del sistema
+Thumbs.db
+Desktop.ini
+.DS_Store
