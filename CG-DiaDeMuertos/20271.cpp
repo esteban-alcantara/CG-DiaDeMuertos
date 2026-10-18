@@ -68,9 +68,9 @@ glm::vec3 lightPosition(0.0f, 4.0f, -10.0f);
 glm::vec3 lightDirection(0.0f, -1.0f, -1.0f);
 
 //// Light
-glm::vec3 lightColor = glm::vec3(0.7f);
-glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
-glm::vec3 ambientColor = diffuseColor * glm::vec3(0.75f);
+glm::vec3 lightColor = glm::vec3(0.40f, 0.46f, 0.60f); // Luz nocturna ligeramente azulada.
+glm::vec3 diffuseColor = lightColor * glm::vec3(0.35f);
+glm::vec3 ambientColor = diffuseColor * glm::vec3(0.55f);
 
 void animate(void)
 {
@@ -169,12 +169,12 @@ int main() {
 	Shader animShader("Shaders/anim.vs", "Shaders/anim.fs");	//To use with animated models 
 
 	vector<std::string> faces{
-		"resources/skybox/right.jpg",
-		"resources/skybox/left.jpg",
-		"resources/skybox/top.jpg",
-		"resources/skybox/bottom.jpg",
-		"resources/skybox/front.jpg",
-		"resources/skybox/back.jpg"
+		"resources/skybox/right.png",
+		"resources/skybox/left.png",
+		"resources/skybox/top.png",
+		"resources/skybox/bottom.png",
+		"resources/skybox/front.png",
+		"resources/skybox/back.png"
 	};
 
 	Skybox skybox = Skybox(faces);
@@ -196,7 +196,8 @@ int main() {
 	Model tumba_4("resources/objects/tumbas/tumba-4.obj");
 	Model tumba_5("resources/objects/tumbas/tumba-5.obj");
 
-
+	// Reutilizar los cinco modelos para dibujar las 72 tumbas.
+	Model* modelosTumbas[5] = { &tumba_1, &tumba_2, &tumba_3, &tumba_4, &tumba_5 };
 
 
 	// create transformations and Projection
@@ -245,7 +246,7 @@ int main() {
 		staticShader.setVec3("dirLight.direction", lightDirection);
 		staticShader.setVec3("dirLight.ambient", ambientColor);
 		staticShader.setVec3("dirLight.diffuse", diffuseColor);
-		staticShader.setVec3("dirLight.specular", glm::vec3(0.6f, 0.6f, 0.6f));
+		staticShader.setVec3("dirLight.specular", lightColor * 0.2f);
 
 		staticShader.setVec3("pointLight[0].position", lightPosition);
 		staticShader.setVec3("pointLight[0].ambient", glm::vec3(0.0f, 0.0f, 0.0f));
@@ -333,10 +334,8 @@ int main() {
 		staticShader.setMat4("view", viewOp);
 
 		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.75f, 0.0f));
-		// modelOp = glm::scale(modelOp, glm::vec3(0.2f));
-		modelOp = glm::scale(modelOp, glm::vec3(10.0f));
+		modelOp = glm::scale(modelOp, glm::vec3(15.0f));
 		staticShader.setMat4("model", modelOp);
-		//piso.Draw(staticShader);
 		piso.Draw(staticShader);
 
 		// -------------------------------------------------------------------------------------------------------------------------
@@ -348,61 +347,81 @@ int main() {
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(50.0f, 0.0f, 60.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(1.6f));
-		//modelOp = glm::rotate(modelOp, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		staticShader.setMat4("model", modelOp);
-		ahuehuete.Draw(staticShader);
+
+		const glm::vec2 posicionesArboles[10] = {
+			{-16.75f,   7.5f},
+			{ 16.75f,   7.5f},
+			{-16.75f, -18.5f},
+			{ 16.75f, -18.5f},
+			{ -9.25f,  14.0f},
+			{  9.25f,  14.0f},
+			{  9.25f,  -5.5f},
+			{ -2.25f, -10.5f}, 
+			{ -2.25f, -23.5f}, 
+			{  2.25f, -23.5f}  
+		};
+		// Alturas aproximadas de los arboles
+		const float escalasArboles[10] = { 3.8f, 3.5f, 4.0f, 3.7f, 3.2f, 3.4f, 3.0f, 3.5f, 3.5f, 3.5f };
+
+		for (int arbol = 0; arbol < 10; arbol++) {
+			modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(
+				posicionesArboles[arbol].x * 15.0f,
+				-1.75f,
+				-posicionesArboles[arbol].y * 15.0f));
+
+			if (arbol == 8 || arbol == 9) {
+				modelOp = glm::rotate(modelOp, glm::radians(arbol == 8 ? 45.0f : 30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			}
+			modelOp = glm::scale(modelOp, glm::vec3(escalasArboles[arbol]));
+			modelOp = glm::translate(modelOp, glm::vec3(0.1198f, -0.1083f, -0.15035f));
+			staticShader.setMat4("model", modelOp);
+			ahuehuete.Draw(staticShader);
+		}
 		glDisable(GL_BLEND);
 
+		// -------------------------------------------------------------------------------------------------------------------------
+		// Tumbas: 6 secciones, 2 filas y 6 columnas en cada seccion (72 tumbas).
+		// -------------------------------------------------------------------------------------------------------------------------
+		const glm::vec2 zonas[6] = {
+			{-9.25f,   7.5f},  // A
+			{ 9.25f,   7.5f},  // B
+			{-9.25f,  -5.5f},  // C
+			{ 9.25f,  -5.5f},  // D
+			{-9.25f, -18.5f},  // E
+			{ 9.25f, -18.5f}   // F
+		};
+
+		const float columnas[6] = { -6.25f, -3.75f, -1.25f, 1.25f, 3.75f, 6.25f };
+		const float filas[2] = { -2.5f, 2.5f };
+
+		// Indices 0..4 equivalen a tumba_1..tumba_5.
+		const int distribucion[2][6] = {
+			{ 0, 2, 4, 1, 3, 0 },
+			{ 3, 1, 0, 4, 2, 1 }
+		};
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 0.0f, 20.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(1.6f));
-		//modelOp = glm::rotate(modelOp, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		staticShader.setMat4("model", modelOp);
-		tumba_1.Draw(staticShader);
-		glDisable(GL_BLEND);
 
+		for (int zona = 0; zona < 6; zona++) {
+			for (int fila = 0; fila < 2; fila++) {
+				for (int columna = 0; columna < 6; columna++) {
+					const float x = zonas[zona].x + columnas[columna];
+					const float y = zonas[zona].y + filas[fila];
+					const int tipo = (distribucion[fila][columna] + zona) % 5;
 
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 0.0f, 100.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(1.6f));
-		//modelOp = glm::rotate(modelOp, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		staticShader.setMat4("model", modelOp);
-		tumba_2.Draw(staticShader);
-		glDisable(GL_BLEND);
+					modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(x * 15.0f, -1.75f, -y * 15.0f));
+					modelOp = glm::scale(modelOp, glm::vec3(1.5f));
 
+					// Compensar el pivote local antes de escalar, sin cambiar la altura.
+					modelOp = glm::translate(modelOp, glm::vec3(-9.9706f, 0.0f, -20.0235f));
 
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 0.0f, 180.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(1.6f));
-		//modelOp = glm::rotate(modelOp, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		staticShader.setMat4("model", modelOp);
-		tumba_3.Draw(staticShader);
-		glDisable(GL_BLEND);
+					staticShader.setMat4("model", modelOp);
+					modelosTumbas[tipo]->Draw(staticShader);
+				}
+			}
+		}
 
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 0.0f, 260.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(1.6f));
-		//modelOp = glm::rotate(modelOp, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		staticShader.setMat4("model", modelOp);
-		tumba_4.Draw(staticShader);
-		glDisable(GL_BLEND);
-
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(150.0f, 0.0f, 260.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(1.6f));
-		//modelOp = glm::rotate(modelOp, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		staticShader.setMat4("model", modelOp);
-		tumba_5.Draw(staticShader);
 		glDisable(GL_BLEND);
 
 
