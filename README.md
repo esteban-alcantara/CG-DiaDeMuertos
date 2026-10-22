@@ -42,12 +42,17 @@ Solicitar el acceso a la carpeta compartida.
 
 Evita que la extracción cree niveles adicionales como `resources/resources/` o `Texturas/Texturas/`. Por ejemplo, Aquaman debe estar en `resources/objects/Aquaman/`.
 
-## 4. Compilar y ejecutar
+## 3. Compilar y ejecutar
 
 1. Compila la solución.
 2. En Visual Studio presiona **F5** para ejecutar con el depurador o **Ctrl + F5** para ejecutar sin depuración.
 
 ## Trabajo colaborativo y assets
+
+La escena se organiza en seis clases dentro de `CG-DiaDeMuertos/componentes/`.
+Consulta la [guia de componentes](CG-DiaDeMuertos/componentes/README.md) para saber
+donde modificar modelos, distribuciones, camara e iluminacion y como agregar un
+componente sin crear encabezados nuevos.
 
 - Versiona el código, los shaders y los archivos compartidos de configuración en GitHub.
 - Comparte los modelos y las texturas mediante Drive, conservando su estructura de carpetas.

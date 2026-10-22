@@ -5,6 +5,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Archivos de origen\Componentes">
+      <UniqueIdentifier>{F640575B-C6F7-4F03-9C17-375220BC21E0}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Archivos de encabezado">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
@@ -15,6 +18,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="componentes\Tumbas.cpp">
+      <Filter>Archivos de origen\Componentes</Filter>
+    </ClCompile>
+    <ClCompile Include="componentes\Arboles.cpp">
+      <Filter>Archivos de origen\Componentes</Filter>
+    </ClCompile>
+    <ClCompile Include="componentes\Piso.cpp">
+      <Filter>Archivos de origen\Componentes</Filter>
+    </ClCompile>
+    <ClCompile Include="componentes\Iluminacion.cpp">
+      <Filter>Archivos de origen\Componentes</Filter>
+    </ClCompile>
+    <ClCompile Include="componentes\ControlCamara.cpp">
+      <Filter>Archivos de origen\Componentes</Filter>
+    </ClCompile>
+    <ClCompile Include="componentes\Fondo.cpp">
+      <Filter>Archivos de origen\Componentes</Filter>
+    </ClCompile>
     <ClCompile Include="20271.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
